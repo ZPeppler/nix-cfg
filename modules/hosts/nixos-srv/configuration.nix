@@ -3,6 +3,7 @@
     imports =
       [ # Include the results of the hardware scan.
         self.nixosModules.nixosSrvHardware
+        self.nixosModules.starship
         inputs.nix-ld.nixosModules.nix-ld
       ];
 
