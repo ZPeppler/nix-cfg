@@ -14,6 +14,7 @@
   flake.homeModules.zpepplerModule = { pkgs, ... }: {
     programs.bash.enable = true;
     programs.bash.shellAliases.ll = "ls -l";
+    programs.bash.shellAliases.nrs = "sudo nixos-rebuild switch --flake $HOME/nix-cfg#nixosSrv";
 
     home.packages = with pkgs; [
       nodejs
