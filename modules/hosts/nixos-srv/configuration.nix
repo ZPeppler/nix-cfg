@@ -1,78 +1,201 @@
-{ self, inputs, ... }: {
-  flake.nixosModules.nixos-srv-configuration = { config, lib, pkgs, ... }: {
+{ self, inputs, ... }: 
+
+{
+  flake.nixosModules.nixos-srv-configuration = { config, lib, pkgs, ... }: 
+  {
     imports =
       [ # Include the results of the hardware scan.
         self.nixosModules.nixos-srv-hardware
         self.nixosModules.starship
         inputs.nix-ld.nixosModules.nix-ld
       ];
+  
+    # ---------------------------------------------
+    # Nix Settings 
+    # ---------------------------------------------
 
-    boot.loader.systemd-boot.enable = true;
-    boot.loader.efi.canTouchEfiVariables = true;
-
-    boot.kernelPackages = pkgs.linuxPackages_latest;
-
-    networking.hostName = "nixos-srv"; # Define your hostname.
-
-    networking.networkmanager.enable = true;
-
-    networking.firewall.allowedTCPPorts = [ 22 ];
-
-    time.timeZone = "America/New_York";
-    services.openssh.enable = true;
-
-    security.sudo = {
-      wheelNeedsPassword = false;
-      extraConfig = ''
-        Defaults pwfeedback
-      '';
+    nixpkgs = {
+      config.allowUnfree = true;
     };
 
-    users.users.zpeppler = {
+    nix = {
+      settings = {
+        experimental-features = [
+          "nix-command"
+          "flakes"
+        ];
+        trusted-users = [
+          "root"
+          "zpeppler"
+        ];
+      };
+    };
+
+
+    # ---------------------------------------------
+    # Boot Settings 
+    # ---------------------------------------------
+
+    boot = { 
+      loader = {
+        systemd-boot.enable = true;
+        efi.canTouchEfiVariables = true;
+      };
+      
+      kernelPackages = pkgs.linuxPackages_latest;
+      
+      tmp = {
+        useTmpfs = true;
+        tmpfsSize = "4G";
+        cleanOnBoot = true;
+      };
+    };
+
+    # ---------------------------------------------
+    # Network Settings 
+    # ---------------------------------------------
+
+    networking = {
+      hostName = "nixos-srv";
+      networkmanager.enable = true;
+      firewall.allowedTCPPorts = [
+        22
+        9090
+      ];
+    };
+
+    
+    # ---------------------------------------------
+    # Services 
+    # ---------------------------------------------
+
+    services = {
+      openssh.enable = true;
+
+      cockpit = {
+        enable = true;
+        port = 9090;
+        plugins = with pkgs; [
+          cockpit-podman
+        ];
+        settings = {
+          WebService = {
+            AllowUnencrypted = true;
+          };
+        };
+      };
+    };
+
+    
+    # ---------------------------------------------
+    # Security
+    # ---------------------------------------------
+
+    security = {
+      polkit.enable = true;
+      rtkit.enable = true;
+
+      sudo = {
+        wheelNeedsPassword = false; 
+        extraConfig = ''
+          Defaults pwfeedback
+        '';
+      };
+    };
+
+    virtualisation = {
+      containers.enable = true;
+      podman = {
+        enable = true;
+        dockerCompat = true;
+        defaultNetwork.settings.dns_enabled = true;
+      };
+    };
+
+    # ---------------------------------------------
+    # Locale
+    # ---------------------------------------------
+
+    time.timeZone = "America/New_York";
+    i18n = {
+      defaultLocale = "en_US.UTF-8";
+    };
+
+    # ---------------------------------------------
+    # Users
+    # ---------------------------------------------
+
+    users.users.zpeppler= {
       isNormalUser = true;
-      extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-      packages = with pkgs; [
-        neovim
-        nodejs
-        uv
-        cargo
-        fzf
-        eza
-        starship
-        yazi
-        lazygit
-        wl-clipboard
-        tree-sitter
-        sshfs
+      extraGroups = [ 
+        "wheel" 
+        "networkmanager"
+        "podman"
+        "storage"
       ];
     };
 
     home-manager.users.zpeppler = self.homeModules.zpepplerModule;
 
+    # ---------------------------------------------
+    # System Pacakges
+    # ---------------------------------------------
+    
+    programs.nix-ld.dev.enable = true;
     environment.systemPackages = with pkgs; [
-      vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+      vim
       wget
       git
+      alacritty
+      gcc
+      gnumake
+      libtool
       curl
       zip
       unzip
       coreutils
+      clang
+      cmake
+      sshfs
       uv
+
+      podman-compose
+
+      cockpit
+      cockpit-podman
+
+      kubectl
       tmux
       sesh
       television
-      lua5_1
       wl-clipboard
+      lua5_1
       luarocks
       tree-sitter
+      unzip
       fd
-      fzf
       ripgrep
+      fzf
+      bat
+      jq
+      yq
       nodejs
     ];
-    programs.nix-ld.dev.enable = true;
-    system.stateVersion = "26.05"; # Did you read the comment?
 
+    # ---------------------------------------------
+    # Fonts
+    # ---------------------------------------------
+
+    fonts.packages = with pkgs; [
+      nerd-fonts.jetbrains-mono
+      nerd-fonts.symbols-only 
+    ];
+
+    # ---------------------------------------------
+    # System version
+    # ---------------------------------------------
+   
+    system.stateVersion = "26.05"; 
   };
 
 }
