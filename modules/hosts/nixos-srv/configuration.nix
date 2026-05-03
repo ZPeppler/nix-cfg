@@ -1,8 +1,8 @@
 { self, inputs, ... }: {
-  flake.nixosModules.nixosSrvConfiguration = { config, lib, pkgs, ... }: {
+  flake.nixosModules.nixos-srv-configuration = { config, lib, pkgs, ... }: {
     imports =
       [ # Include the results of the hardware scan.
-        self.nixosModules.nixosSrvHardware
+        self.nixosModules.nixos-srv-hardware
         self.nixosModules.starship
         inputs.nix-ld.nixosModules.nix-ld
       ];
@@ -43,6 +43,7 @@
         lazygit
         wl-clipboard
         tree-sitter
+        sshfs
       ];
     };
 

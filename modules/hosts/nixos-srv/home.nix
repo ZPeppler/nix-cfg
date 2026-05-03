@@ -12,9 +12,6 @@
   };
 
   flake.homeModules.zpepplerModule = { pkgs, ... }: {
-    programs.bash.enable = true;
-    programs.bash.shellAliases.ll = "ls -l";
-    programs.bash.shellAliases.nrs = "sudo nixos-rebuild switch --flake $HOME/nix-cfg#nixosSrv";
 
     home.packages = with pkgs; [
       nodejs
@@ -40,6 +37,18 @@
     ];
 
     programs = {
+      bash = { 
+        enable = true;
+        shellAliases = {
+          ll = "ls -l";
+          lla = "ls -la";
+          nrs = "sudo nixos-rebuild switch --flake $HOME/Projects/nix-cfg#$(hostname -f)";
+        };
+        initExtra = ''
+        export STARSHIP_CONFIG="/etc/starship-root.toml"
+        '';
+      };
+
       git = {
         enable = true;
         settings = {

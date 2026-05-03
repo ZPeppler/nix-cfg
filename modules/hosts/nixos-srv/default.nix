@@ -1,7 +1,7 @@
 { self, inputs, ... }: {
-  flake.nixosConfigurations.nixosSrv = inputs.nixpkgs.lib.nixosSystem {
+  flake.nixosConfigurations.nixos-srv = inputs.nixpkgs.lib.nixosSystem {
     modules = [ 
-      self.nixosModules.nixosSrvConfiguration
+      self.nixosModules.nixos-srv-configuration
       self.nixosModules.myHomeManager
    ];
  };
