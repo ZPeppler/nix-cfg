@@ -1,23 +1,34 @@
-{ self, inputs, ... }: {
+{ self, inputs, ... }: 
+
+{
   
-  flake.homeConfigurations.zpeppler = inputs.home-manager.lib.homeManagerConfiguration {
+  flake.homeConfigurations.zpeppler = inputs.home-manager.lib.homeManagerConfiguration 
+  {
     pkgs = import inputs.nixpkgs { system = "x86_64-linux"; };
     modules = [
       self.homeModules.zpepplerModule
       {
-        home.username = "zpeppler";
-        home.homeDirectory = "/home/zpeppler";
+        home = {
+          username = "zpeppler";
+          homeDirectory = "/home/zpeppler";
+          sessionVariables = {
+            EDITOR = "nvim";
+            VISUAL = "nvim";
+          };
+        };
       }
     ];
   };
 
   flake.homeModules.zpepplerModule = { pkgs, ... }: {
-
+    
+    home.stateVersion = "26.05";
     home.packages = with pkgs; [
       nodejs
       gcc
       uv
       cargo    
+      
       # Terminal
       btop
       eza
@@ -45,6 +56,7 @@
           nrs = "sudo nixos-rebuild switch --flake $HOME/Projects/nix-cfg#$(hostname -f)";
         };
         initExtra = ''
+        eval "$(starship init bash)"         
         export STARSHIP_CONFIG="/etc/starship-root.toml"
         '';
       };
@@ -59,8 +71,6 @@
         };
       };
     };
-
-    home.stateVersion = "26.05";
   };
 }
 
