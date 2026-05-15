@@ -10,10 +10,8 @@
          directories = [
            "Projects"
            ".ssh"
-           ".vim"
-         ];
-         files = [
-           ".vimrc"
+           ".local/state/nvim"
+           ".tmux/plugins"
          ];
         };
 
