@@ -30,7 +30,6 @@
           "/var/lib/nixos"
           "/var/log"
           "/etc/NetworkManager/system-connections"
-          "/tmp"
           "/etc/ssh"
         ];
       };

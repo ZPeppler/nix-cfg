@@ -132,7 +132,7 @@
     users.mutableUsers = false;
     users.users.zpeppler= {
       isNormalUser = true;
-      hasedPasswordFile = "/persistent/passwd";
+      hashedPasswordFile = "/persistent/passwd";
       extraGroups = [ 
         "wheel" 
         "networkmanager"
