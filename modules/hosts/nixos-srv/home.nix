@@ -1,10 +1,4 @@
 { config, self, inputs, ... }: 
-let
-  dotfile="${config.home.homeDirectory}/Projects/nix-cfg/modules/config";
-  create_symlink = path: config.lib.file.mkOutOfStoreSymlink path;
-  configs = {
-    sesh = "sesh";
-  };
 {
   
   flake.homeConfigurations.zpeppler = inputs.home-manager.lib.homeManagerConfiguration 
@@ -25,7 +19,15 @@ let
     ];
   };
 
-  flake.homeModules.zpepplerModule = { pkgs, ... }: {
+  flake.homeModules.zpepplerModule = { config, pkgs, ... }: 
+let
+  dotfiles="${config.home.homeDirectory}/Projects/nix-cfg/modules/config";
+  create_symlink = path: config.lib.file.mkOutOfStoreSymlink path;
+  configs = {
+    sesh = "sesh";
+  };
+in
+  {
     
     home.stateVersion = "26.05";
     home.packages = with pkgs; [
@@ -75,6 +77,7 @@ let
           };
         };
       };
+
     };
 
     xdg.configFile = builtins.mapAttrs( name: subpath: {
