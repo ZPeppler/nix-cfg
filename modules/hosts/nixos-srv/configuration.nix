@@ -7,6 +7,10 @@
       [ # Include the results of the hardware scan.
         self.nixosModules.nixos-srv-hardware
         self.nixosModules.starship
+        inputs.disko.nixosModules.disko
+        inputs.preservation.nixosModules.default
+        self.nixosModules.nixos-srv-disko
+        self.nixosModules.preservation
         inputs.nix-ld.nixosModules.nix-ld
       ];
   
@@ -125,8 +129,10 @@
     # Users
     # ---------------------------------------------
 
+    users.mutableUsers = false;
     users.users.zpeppler= {
       isNormalUser = true;
+      hasedPasswordFile = "/persistent/passwd";
       extraGroups = [ 
         "wheel" 
         "networkmanager"
@@ -190,6 +196,8 @@
       nerd-fonts.jetbrains-mono
       nerd-fonts.symbols-only 
     ];
+
+    systemd.services.systemd-machine-id-commit.enable = false;
 
     # ---------------------------------------------
     # System version
