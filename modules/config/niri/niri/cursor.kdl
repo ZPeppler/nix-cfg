@@ -1,0 +1,5 @@
+cursor {
+  xcursor-theme "Bibata-Modern-Ice"
+  xcursor-size 22
+  hide-when-typing
+}

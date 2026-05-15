@@ -1,0 +1,15 @@
+set number
+set relativenumber
+
+filetype plugin indent on
+set expandtab
+set shiftwidth=2
+set softtabstop=2
+set tabstop=2
+set smartindent
+
+set backspace=indent,eol,start
+
+set mouse=a
+
+syntax on

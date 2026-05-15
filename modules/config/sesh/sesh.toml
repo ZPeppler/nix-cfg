@@ -3,11 +3,22 @@ blacklist = ["scratch"]
 
 cache = false
 
-[default_session]
-startup_command = "eza --all --git --icons --color=always {}"
-
 [[session]]
 name = "tmux-conf"
 path = "~/.config/tmux"
 startup_command = "nvim tmux.conf"
 preview_command = "bat --color=always ~/.config/tmux/tmux.conf"
+
+# [[session]]
+# name = "configuration-nix"
+# path = "~/nixos-dotfiles/host/nixos-wsl/"
+# startup_command = "nvim configuration.nix"
+# preview_command = "bat --color=always ~/nixos-dotfiles/host/nixos-wsl/configuration.nix"
+
+[[wildcard]]
+pattern = "~/Projects/*"
+startup_command = "nvim"
+
+[[wildcard]]
+pattern = "~/Documents/*"
+startup_command = "nvim"
