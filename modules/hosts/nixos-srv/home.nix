@@ -1,5 +1,10 @@
-{ self, inputs, ... }: 
-
+{ config, self, inputs, ... }: 
+let
+  dotfile="${config.home.homeDirectory}/Projects/nix-cfg/modules/config";
+  create_symlink = path: config.lib.file.mkOutOfStoreSymlink path;
+  configs = {
+    sesh = "sesh";
+  };
 {
   
   flake.homeConfigurations.zpeppler = inputs.home-manager.lib.homeManagerConfiguration 
@@ -71,6 +76,11 @@
         };
       };
     };
+
+    xdg.configFile = builtins.mapAttrs( name: subpath: {
+      source = create_symlink "${dotfiles}/${subpath}";
+      recursive = true;
+    }) configs;
   };
 }
 
