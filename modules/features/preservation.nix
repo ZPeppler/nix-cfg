@@ -11,7 +11,9 @@
            "Projects"
            ".ssh"
            ".local/state/nvim"
+           ".local/share/nvim"
            ".tmux/plugins"
+           ".venv"
          ];
         };
 
