@@ -1,9 +1,6 @@
 { config, pkgs, self, inputs, ... }:
-let
-  zshDir = self + "/config/zsh";
-in
 {
-  flake.homeModules.zsh = { pkgs, ... }: {
+  flake.homeModules.zsh = { pkgs, lib, ... }: {
     programs.zsh = {
       enable = true;
       package = self.packages.${pkgs.stdenv.hostPlatform.system}.myZSH;
